@@ -93,7 +93,7 @@ export default defineConfig((config) => {
     },
     build: {
       target: 'esnext',
-      sourcemap: true,
+      sourcemap: 'inline',
     },
     plugins: [
       nodePolyfills({
