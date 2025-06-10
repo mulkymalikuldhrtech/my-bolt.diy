@@ -24,6 +24,7 @@
     "paths": {
       "~/*": ["./app/*"]
     },
+    "sourceMap": true,
     // vite takes care of building everything, not tsc
     "noEmit": true
   },

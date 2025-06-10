@@ -93,17 +93,18 @@ export default defineConfig((config) => {
     },
     build: {
       target: 'esnext',
+      sourcemap: true,
     },
     plugins: [
       nodePolyfills({
-        include: ['buffer', 'process', 'util', 'stream'],
+        include: ['buffer', 'process', 'util', 'stream', 'path'],
         globals: {
           Buffer: true,
           process: true,
           global: true,
         },
         protocolImports: true,
-        exclude: ['child_process', 'fs', 'path'],
+        exclude: ['child_process', 'fs'],
       }),
       {
         name: 'buffer-polyfill',
