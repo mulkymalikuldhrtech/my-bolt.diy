@@ -482,3 +482,51 @@ pkg update -y && pkg upgrade -y \
 • Electron apps cannot run under Termux, but the backend (`pnpm run dev`) and the Expo client (`pnpm run mobile:start`) work flawlessly.
 
 ---
+
+## ⚙️ Core Features at a Glance (AGI)
+
+| Layer | Capability | Status |
+|-------|------------|--------|
+| Orchestrator | Task queue, sub-task spawning, owner auth | ✅ Basic (v0) |
+| Agents | Vanguard, Sentinel, Jarvis, etc. | ✅ Ported |
+| Memory | In-memory (default), SQLite adapter | 🟡 WIP |
+| Multimodal | Vision, OCR, Speech, Audio | 🟡 Planning |
+| UI | AGI Dashboard, Voice Commands | ✅ |
+| Mobile | React-Native client, offline APK build | ✅ |
+| Desktop | Electron installers (.dmg/.exe/.AppImage) | ✅ |
+
+---
+
+## 🛠️ Local Installation (all stacks)
+
+1. Clone & install deps
+```bash
+git clone -b agi-revolution https://github.com/stackblitz-labs/bolt.diy.git
+cd bolt.diy
+pnpm install      # one command for EVERY workspace (web, electron, mobile)
+```
+
+2. Start web backend + Bolt IDE:
+```bash
+pnpm run dev   # http://localhost:5173
+```
+
+3. Electron desktop (optional)
+```bash
+pnpm electron:build:dist  # outputs installers in dist/
+```
+
+4. Mobile
+   * Live preview → `pnpm run mobile:start`
+   * Debug APK → `pnpm run build-apk` (needs Android SDK / Docker)
+
+5. Termux (Android)
+```bash
+pkg update -y && pkg upgrade -y \
+&& curl -fsSL https://raw.githubusercontent.com/stackblitz-labs/bolt.diy/agi-revolution/scripts/termux-setup.sh | bash \
+&& cd bolt.diy && pnpm install && pnpm run dev
+```
+
+All commands above honour **owner lock-in**: only requests with `owner:"Mulky Malikul Dhaher"` are accepted by the AGI Orchestrator.
+
+---
