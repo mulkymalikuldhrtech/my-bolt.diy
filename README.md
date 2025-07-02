@@ -25,6 +25,7 @@ bolt.diy was originally started by [Cole Medin](https://www.youtube.com/@ColeMed
 - [Contributing](#contributing)
 - [Roadmap](#roadmap)
 - [FAQ](#faq)
+- [AI Multi-Agent Ecosystem (EX Machina)](#ai-multi-agent-ecosystem-ex-machina)
 
 ## Join the community
 
@@ -361,6 +362,31 @@ Explore upcoming features and priorities on our [Roadmap](https://roadmap.sh/r/o
 
 For answers to common questions, issues, and to see a list of recommended models, visit our [FAQ Page](FAQ.md).
 
+## AI Multi-Agent Ecosystem (EX Machina)
+
+> **Status:** Experimental (Phase 0) – Foundations Only
+
+This release introduces the first building blocks of the *EX Machina* multi-agent framework envisioned in the project roadmap.
+
+### What's Included
+
+1. **Core runtime**  (`agents/core`)
+   • `BaseAgent` – abstract class every agent extends.
+   • `AgentManager` – singleton registry + task delegation helper.
+
+2. **Built-in agent example**
+   • `VanguardAgent` – a placeholder "future research" agent that simply echoes received tasks for now.
+
+3. **Auto-registration mechanism**
+   • `agents/registry.ts` eagerly imports all built-in implementations so they become available system-wide without manual wiring.
+
+4. **API endpoint**  `GET /api/agents`
+   Returns a JSON list of the currently registered agents.
+
+5. **UI**  `/agents` route (see sidebar or navigate directly)
+   Minimal table to inspect agent id, name, description and skills.
+
+These primitives will expand into the full-fledged Sentinel, Purifier, Jarvis, Mechanicus, etc. agents described in the design doc. Community PRs are welcome!
 
 # Licensing
 **Who needs a commercial WebContainer API license?**
