@@ -1,0 +1,26 @@
+# 🧠 Agentic AI System - Python Dependencies
+# Fixed version with minimal dependencies
+
+# Core Python libraries (most are built-in)
+# asyncio - built-in
+# threading - built-in  
+# json - built-in
+# datetime - built-in
+# pathlib - built-in
+# dataclasses - built-in (Python 3.7+)
+# typing - built-in (Python 3.5+)
+
+# Optional: Enhanced features (comment out if not needed)
+# aiohttp>=3.8.0  # For web server capabilities
+# fastapi>=0.68.0  # For REST API
+# uvicorn>=0.15.0  # ASGI server
+# websockets>=10.0  # WebSocket support
+# pydantic>=1.8.0  # Data validation
+
+# Development tools (optional)
+# pytest>=6.2.0  # Testing
+# black>=21.0.0  # Code formatting
+# flake8>=3.9.0  # Linting
+
+# Note: The main.py system is designed to work with Python 3.7+ 
+# standard library only for maximum compatibility
