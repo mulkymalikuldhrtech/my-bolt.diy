@@ -7,11 +7,18 @@ interface DelegateRequest {
   agentId: string;
   type: string;
   payload?: unknown;
+  owner?: string;
 }
+
+const OWNER = 'Mulky Malikul Dhaher';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const body: DelegateRequest = await request.json();
+    if (body.owner !== OWNER) {
+      return json({ success: false, error: 'Unauthorized: invalid owner' }, { status: 403 });
+    }
+
     const result = await agentManager.delegate(body.agentId, { type: body.type, payload: body.payload });
     return json(result);
   } catch (error) {

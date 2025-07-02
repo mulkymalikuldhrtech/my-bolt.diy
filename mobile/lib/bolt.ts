@@ -12,7 +12,7 @@ export async function delegate(agentId: string, type: string, payload?: unknown)
   const res = await fetch(`${API_BASE}/api.agents.delegate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ agentId, type, payload }),
+    body: JSON.stringify({ agentId, type, payload, owner: 'Mulky Malikul Dhaher' }),
   });
   return await res.json();
 }
