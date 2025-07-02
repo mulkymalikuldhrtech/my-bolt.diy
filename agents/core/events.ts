@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events';
+type Listener<T = unknown> = (payload: T) => void;
 
 export interface AgentRegisteredEvent {
   type: 'registered';
@@ -8,4 +8,20 @@ export interface AgentRegisteredEvent {
 
 export type AgentSystemEvent = AgentRegisteredEvent;
 
-export const agentEvents = new EventEmitter();
+class SimpleEmitter {
+  private map = new Map<string, Listener[]>();
+
+  on<T extends AgentSystemEvent['type']>(event: T, listener: Listener<Extract<AgentSystemEvent, { type: T }>>) {
+    const arr = this.map.get(event) ?? [];
+    arr.push(listener as Listener);
+    this.map.set(event, arr);
+  }
+
+  emit(event: AgentSystemEvent['type'], payload: AgentSystemEvent) {
+    const arr = this.map.get(event);
+    if (!arr) return;
+    arr.forEach((l) => l(payload));
+  }
+}
+
+export const agentEvents = new SimpleEmitter();
