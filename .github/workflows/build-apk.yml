@@ -1,0 +1,23 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - run: pnpm install
+      - name: Set up Build Environment (eas-cli)
+        run: |
+          pnpm add -g eas-cli
+      - name: Build Debug APK (Docker)
+        run: eas build --local --profile preview --platform android --output release/android || exit 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ex-machina-mobile-apk
+          path: release/android/*.apk

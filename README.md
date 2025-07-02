@@ -462,6 +462,14 @@ After completion you will find `release/android/ex-machina-mobile.apk` which can
 
 > The script leverages **EAS Local Build**, so ensure Android SDK & JDK 17 are installed or use Docker (`eas build --local --docker`).
 
+### 🏗️ CI Build
+A preconfigured **GitHub Actions** workflow (`.github/workflows/build-apk.yml`) can build the debug APK entirely in CI and publish it as an artifact:
+```bash
+gh workflow run Android APK
+# or trigger manually from the Actions tab
+```
+Once the job completes, download `ex-machina-mobile-apk` artifact – it will contain `ex-machina-mobile.apk` ready to install.
+
 # Licensing
 **Who needs a commercial WebContainer API license?**
 
