@@ -19,6 +19,8 @@ export function useVoiceAgent(onCommand?: (event: VoiceCommandEvent) => void) {
   const [isSupported, setIsSupported] = useState<boolean>(true);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const autoResumeRef = useRef(false);
+  const wakeLockRef = useRef<any>(null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -78,6 +80,8 @@ export function useVoiceAgent(onCommand?: (event: VoiceCommandEvent) => void) {
     try {
       recognitionRef.current.start();
       setIsListening(true);
+      autoResumeRef.current = true;
+      requestWakeLock();
     } catch (_) {
       // Ignore – start called while already running.
     }
@@ -86,7 +90,44 @@ export function useVoiceAgent(onCommand?: (event: VoiceCommandEvent) => void) {
   const stop = () => {
     recognitionRef.current?.stop();
     setIsListening(false);
+    autoResumeRef.current = false;
+    releaseWakeLock();
   };
+
+  // Wake Lock helpers
+  const requestWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator && !wakeLockRef.current) {
+        // @ts-ignore
+        wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+        wakeLockRef.current.addEventListener('release', () => {
+          wakeLockRef.current = null;
+        });
+      }
+    } catch (err) {
+      console.warn('Wake lock error', err);
+    }
+  };
+
+  const releaseWakeLock = async () => {
+    try {
+      await wakeLockRef.current?.release();
+    } catch {}
+    wakeLockRef.current = null;
+  };
+
+  // Handle page visibility – pause when hidden, resume when visible if autoResume was set
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.hidden) {
+        stop();
+      } else if (autoResumeRef.current) {
+        start();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
 
   return {
     start,
