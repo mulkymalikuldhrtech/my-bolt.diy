@@ -1,3 +1,4 @@
+import React from 'react';
 import { json, type MetaFunction } from '@remix-run/cloudflare';
 import { ClientOnly } from 'remix-utils/client-only';
 import AGIDashboard from '~/components/dashboard/AGIDashboard';
