@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 dotenv.config();
 
@@ -132,6 +133,48 @@ export default defineConfig((config) => {
       tsconfigPaths(),
       chrome129IssuePlugin(),
       config.mode === 'production' && optimizeCssModules({ apply: 'build' }),
+      // Progressive Web App support
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.svg', 'robots.txt'],
+        manifest: {
+          name: 'Bolt AGI Dashboard',
+          short_name: 'Bolt AGI',
+          start_url: '/agi',
+          display: 'standalone',
+          background_color: '#141414',
+          theme_color: '#5a44ff',
+          icons: [
+            {
+              src: '/icons/icon-192.png',
+              sizes: '192x192',
+              type: 'image/png',
+            },
+            {
+              src: '/icons/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+            },
+          ],
+        },
+        workbox: {
+          runtimeCaching: [
+            {
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'images',
+                expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              },
+            },
+            {
+              urlPattern: /^https:\/\/(?:api|cdn)\./,
+              handler: 'NetworkFirst',
+              options: { cacheName: 'api' },
+            },
+          ],
+        },
+      }),
     ],
     envPrefix: [
       'VITE_',
