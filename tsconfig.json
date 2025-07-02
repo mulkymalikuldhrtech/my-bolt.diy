@@ -2,11 +2,16 @@
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": [
+      "react",
+      "react-dom",
+      "node",
       "@remix-run/cloudflare",
       "vite/client",
       "@cloudflare/workers-types/2023-07-01",
       "@types/dom-speech-recognition",
-      "electron"
+      "electron",
+      "react",
+      "react-dom"
     ],
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -35,5 +40,9 @@
     "**/.server/**/*.tsx",
     "**/.client/**/*.ts",
     "**/.client/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "mobile"
   ]
 }

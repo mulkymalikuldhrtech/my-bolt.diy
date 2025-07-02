@@ -3,6 +3,7 @@ import type { ProviderInfo, ProviderConfig, ModelInfo } from './types';
 import type { IProviderSetting } from '~/types/model';
 import { createOpenAI } from '@ai-sdk/openai';
 import { LLMManager } from './manager';
+import { keyVault } from '~/lib/agents/keyVault';
 
 export abstract class BaseProvider implements ProviderInfo {
   abstract name: string;
@@ -45,8 +46,16 @@ export abstract class BaseProvider implements ProviderInfo {
     }
 
     const apiTokenKey = this.config.apiTokenKey || defaultApiTokenKey;
-    const apiKey =
-      apiKeys?.[this.name] || serverEnv?.[apiTokenKey] || process?.env?.[apiTokenKey] || manager.env?.[apiTokenKey];
+    let apiKey =
+      apiKeys?.[this.name] ||
+      serverEnv?.[apiTokenKey] ||
+      // @ts-ignore - process may be undefined in some env
+      (typeof process !== 'undefined' ? (process as any)?.env?.[apiTokenKey] : undefined) ||
+      manager.env?.[apiTokenKey];
+
+    if (!apiKey) {
+      apiKey = keyVault.get(this.name);
+    }
 
     return {
       baseUrl,
