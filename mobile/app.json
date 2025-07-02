@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "EX Machina",
+    "slug": "ex-machina-mobile",
+    "version": "1.0.0",
+    "extra": {
+      "backendUrl": "http://localhost:5173"
+    },
+    "platforms": ["android"],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "plugins": [],
+    "android": {
+      "package": "ai.exmachina.app",
+      "permissions": [],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    }
+  }
+}

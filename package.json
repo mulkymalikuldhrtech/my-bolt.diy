@@ -91,10 +91,10 @@
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.4",
-    "@remix-run/cloudflare": "^2.15.2",
+    "@remix-run/cloudflare": "^2.16.0",
     "@remix-run/cloudflare-pages": "^2.15.2",
     "@remix-run/node": "^2.15.2",
-    "@remix-run/react": "^2.15.2",
+    "@remix-run/react": "^2.16.0",
     "@tanstack/react-virtual": "^3.13.0",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@uiw/codemirror-theme-vscode": "^4.23.6",
@@ -206,9 +206,7 @@
     "vitest": "^3.2.3",
     "wrangler": "^4.19.1",
     "@types/react-native": "^0.74.4",
-    "@types/node": "^20.11.30",
-    "@remix-run/cloudflare": "^2.16.0",
-    "@remix-run/react": "^2.16.0"
+    "@types/node": "^20.11.30"
   },
   "resolutions": {
     "@typescript-eslint/utils": "^8.0.0-alpha.30"
