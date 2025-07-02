@@ -1,6 +1,22 @@
-# bolt.diy
+# Bolt.AGI – The bolt.diy Revolution
 
-[![bolt.diy: AI-Powered Full-Stack Web Development in the Browser](./public/social_preview_index.jpg)](https://bolt.diy)
+[![Bolt.AGI: Full-Stack AGI Development Toolkit](./public/social_preview_index.jpg)](https://bolt.diy)
+
+> **Bolt.AGI** is the next evolutionary step of **bolt.diy** – an **Autonomous General Intelligence (AGI) engineering platform** that unifies Web, Desktop *and* Mobile development in a single monorepo. The goal of this branch ( `agi-revolution` ) is simple:
+>
+> *  🔗  Seamlessly **merge** every community contribution into one superior, battle-tested code-base
+> *  📦  Provide **zero-friction dependency installation** – one `pnpm install` for the whole workspace (`web`, `electron`, `mobile`)
+> *  ⚡  Ship **ready-to-run binaries**: Electron installers for macOS / Windows / Linux **and** a signed **Android .apk**
+> *  🧑‍💻  Guarantee that **UI, Front-End and Back-End** work together without errors out-of-the-box
+>
+> If you are reading this on any branch other than `agi-revolution`, switch now:
+>
+> ```bash
+> git fetch origin && git checkout -b agi-revolution origin/main
+> pnpm install
+> ```
+>
+> The remainder of this README retains the historic documentation of bolt.diy. New AGI-specific sections are marked with "(AGI)" badges.
 
 Welcome to bolt.diy, the official open source version of Bolt.new, which allows you to choose the LLM that you use for each prompt! Currently, you can use OpenAI, Anthropic, Ollama, OpenRouter, Gemini, LMStudio, Mistral, xAI, HuggingFace, DeepSeek, or Groq models - and it is easily extended to use any other model supported by the Vercel AI SDK! See the instructions below for running this locally and extending it to include more models.
 
@@ -405,55 +421,34 @@ These primitives will expand into the full-fledged Sentinel, Purifier, Jarvis, M
 
 Use the `/agents` UI or the `/api/agents` endpoint to inspect them.
 
-### Mobile / .apk
-A React-Native client will point to the same GraphQL/REST gateways. For now we provide placeholder scripts:
+### 🚀 Android (.apk) builds  (AGI)
+
+Bolt.AGI ships with a **React-Native / Expo** client located in `/mobile`. You can run it instantly inside *Expo Go* or generate an installable `.apk` with a single command.
+
+### 1️⃣ Live preview on device
 
 ```bash
-pnpm run mobile:start   # (expo start)
-pnpm run mobile:build   # (eas build –profile preview)
+pnpm run mobile:start     # alias for: expo start --clear
 ```
+1. Install **Expo Go** from Google Play.
+2. Scan the QR code shown in the terminal / browser.
+3. The bundle will hot-reload on every save.
 
-Install Expo CLI and EAS then replace the placeholders with real commands. See `docs/mobile.md` (coming soon).
-
-## Android Installation Guide
-
-### Option A — Install Pre-built APK (recommended for testers)
-
-1. Download the latest release asset `ex-machina-mobile-v1.0.apk` from the [Releases page](https://github.com/stackblitz-labs/bolt.diy/releases).
-2. Copy the APK to your Android device (or open the link directly on the phone).
-3. On the device, enable "Install from unknown sources" when prompted and tap the APK to install.
-4. Launch **EX Machina**. On first run you will be asked for the backend URL:
-   * If phone and server share the same Wi-Fi → enter `http://<your-PC-IP>:5173`.
-   * If the backend is deployed publicly (Cloudflare, Vercel, etc.) → enter that HTTPS URL.
-5. Tap **Save & Connect** → the agent list should appear.
-
-### Option B — Build APK Locally with Expo / EAS
-
-Requirements: `node>=18`, `pnpm`, `expo-cli`, `eas-cli` (both global) and an Expo account.
+### 2️⃣ Generate debug APK locally
 
 ```bash
-# 1. Install global CLIs (once)
-pnpm add -g expo-cli eas-cli
-
-# 2. Install workspace deps
-pnpm install
-
-# 3. Build the mobile bundle
-pnpm run mobile:build   # runs: eas build -p android --profile preview --non-interactive
-
-# 4. After compilation finishes, EAS prints a download URL for the .apk /.aab
+pnpm run mobile:build      # runs: eas build -p android --profile preview --non-interactive
 ```
-> By default the build uses the universal **preview** profile (debuggable, no Google Play signing). For production create a `release` profile in `mobile/eas.json`.
+This produces a **universal debug `app-debug.apk`** hosted on EAS. Download the link printed at the end of the build and install it on any Android 8+ device.
 
-### Running in the Expo Go App (Instant Preview)
+### 3️⃣ Production build (.aab) for Play Store
 
 ```bash
-pnpm run mobile:start   # expo start --clear
+EAS_NO_VCS=1 eas build -p android --profile release --non-interactive
 ```
-1. Scan the QR code using **Expo Go** on Android.  
-2. The bundle loads live; any code change under `mobile/` is hot-reloaded.
+The generated **Android App Bundle** complies with Play Store requirements (ARM & x86 splits, 64-bit, etc.). Signing keys are managed by Expo.
 
----
+> **Backend URL** – On first launch the app will attempt to reach `http://localhost:5173`. If your phone is not on the same machine, open the drawer → Settings → _Backend_ and enter your public URL (or the LAN IP of your computer).
 
 # Licensing
 **Who needs a commercial WebContainer API license?**
