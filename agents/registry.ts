@@ -11,6 +11,7 @@ import './implementations/DonorSeekerAgent';
 import './implementations/FundRaiserAgent';
 import './implementations/AutonomatonAgent';
 import './implementations/PersonaAgent';
+import './implementations/SuperAGIAgent';
 
 // Future agents can be added here, e.g.:
 // import './implementations/SentinelAgent';
