@@ -6,6 +6,9 @@ import { renderHeadToString } from 'remix-island';
 import { Head } from './root';
 import { themeStore } from '~/lib/stores/theme';
 
+// AGI Ecosystem Integration
+import { initializeAGIEcosystem } from '../agents/registry';
+
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -13,6 +16,14 @@ export default async function handleRequest(
   remixContext: any,
   _loadContext: AppLoadContext,
 ) {
+  // Initialize AGI Ecosystem on server startup
+  try {
+    const agiStatus = await initializeAGIEcosystem();
+    console.log('🚀 AGI-Bolt Integration:', agiStatus);
+  } catch (error) {
+    console.error('❌ AGI Ecosystem initialization failed:', error);
+  }
+
   // await initializeModelList({});
 
   const readable = await renderToReadableStream(<RemixServer context={remixContext} url={request.url} />, {
