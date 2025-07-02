@@ -1,5 +1,6 @@
 import { BaseAgent } from './BaseAgent';
 import type { AgentTask, AgentResult } from './BaseAgent';
+import { agentEvents } from './events';
 
 export class AgentManager {
   private readonly agents = new Map<string, BaseAgent>();
@@ -10,6 +11,7 @@ export class AgentManager {
       return;
     }
     this.agents.set(agent.id, agent);
+    agentEvents.emit('registered', { type: 'registered', id: agent.id, name: agent.name });
   }
 
   list(): BaseAgent[] {
