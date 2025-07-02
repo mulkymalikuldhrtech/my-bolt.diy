@@ -1,0 +1,27 @@
+{
+  "camelAI": {
+    "enabled": true,
+    "fallbackToStandalone": true,
+    "apiEndpoint": "https://api.camel-ai.org/v1",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "models": {
+      "preferred": "gpt-4",
+      "fallback": "gpt-3.5-turbo",
+      "creative": "claude-3",
+      "analytical": "gpt-4"
+    }
+  },
+  "agents": {
+    "maxConcurrent": 20,
+    "autoScaling": true,
+    "foundationAgents": 4,
+    "collaborationEnabled": true
+  },
+  "system": {
+    "autonomyLevel": "high",
+    "learningRate": 0.1,
+    "innovationRate": 0.05,
+    "collaborationFrequency": 0.15
+  }
+}
