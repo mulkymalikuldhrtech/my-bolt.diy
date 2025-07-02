@@ -1,4 +1,5 @@
 const { execSync } = require('child_process');
+require('./scripts/port-forward.cjs');
 
 // Get git hash with fallback
 const getGitHash = () => {
