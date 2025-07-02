@@ -10,6 +10,7 @@ import './implementations/MbakDokterAgent';
 import './implementations/DonorSeekerAgent';
 import './implementations/FundRaiserAgent';
 import './implementations/AutonomatonAgent';
+import './implementations/PersonaAgent';
 
 // Future agents can be added here, e.g.:
 // import './implementations/SentinelAgent';
