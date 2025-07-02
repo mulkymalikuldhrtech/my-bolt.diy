@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { View, FlatList, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { getAgents } from '@/lib/bolt';
 import { Link } from 'expo-router';
