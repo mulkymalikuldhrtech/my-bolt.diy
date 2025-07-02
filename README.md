@@ -454,3 +454,19 @@ The generated **Android App Bundle** complies with Play Store requirements (ARM 
 **Who needs a commercial WebContainer API license?**
 
 bolt.diy source code is distributed as MIT, but it uses WebContainers API that [requires licensing](https://webcontainers.io/enterprise) for production usage in a commercial, for-profit setting. (Prototypes or POCs do not require a commercial license.) If you're using the API to meet the needs of your customers, prospective customers, and/or employees, you need a license to ensure compliance with our Terms of Service. Usage of the API in violation of these terms may result in your access being revoked.
+
+### 🚀 Termux Quick Setup (AGI)
+
+Run this one-liner inside the Termux app (Android 8+):
+
+```bash
+pkg update -y && pkg upgrade -y \
+&& curl -fsSL https://raw.githubusercontent.com/stackblitz-labs/bolt.diy/agi-revolution/scripts/termux-setup.sh | bash \
+&& git clone https://github.com/stackblitz-labs/bolt.diy.git && cd bolt.diy \
+&& pnpm install && pnpm run dev
+```
+
+• The helper script installs **Node.js LTS**, **pnpm**, **Expo CLI**, **EAS CLI**, compilers and OpenSSL.  
+• Electron apps cannot run under Termux, but the backend (`pnpm run dev`) and the Expo client (`pnpm run mobile:start`) work flawlessly.
+
+---
