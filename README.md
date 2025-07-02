@@ -388,6 +388,33 @@ This release introduces the first building blocks of the *EX Machina* multi-agen
 
 These primitives will expand into the full-fledged Sentinel, Purifier, Jarvis, Mechanicus, etc. agents described in the design doc. Community PRs are welcome!
 
+### Built-in Agents (Phase 0)
+
+| ID | Name | Purpose |
+|----|------|---------|
+| vanguard | Vanguard | Future research & trend prediction |
+| sentinel | Sentinel | Threat forecasting & security monitoring |
+| purifier | Purifier | Malware/exploit eradication |
+| jarvis | Jarvis | Device/IoT management |
+| warlord | Warlord | Cyber-ops / offensive intelligence |
+| mechanicus | Mechanicus | Robotics & hardware specialist |
+| mbakdokter | MbakDokter | Medical research & advisory |
+| donorseeker | DonorSeeker | Detect donation cases |
+| fundraiser | FundRaiser | Run crowdfunding campaigns |
+| autonomaton | Autonomaton | Self-governing supervisor |
+
+Use the `/agents` UI or the `/api/agents` endpoint to inspect them.
+
+### Mobile / .apk
+A React-Native client will point to the same GraphQL/REST gateways. For now we provide placeholder scripts:
+
+```bash
+pnpm run mobile:start   # (expo start)
+pnpm run mobile:build   # (eas build –profile preview)
+```
+
+Install Expo CLI and EAS then replace the placeholders with real commands. See `docs/mobile.md` (coming soon).
+
 # Licensing
 **Who needs a commercial WebContainer API license?**
 

@@ -3,6 +3,7 @@ import type { LoaderFunction } from '@remix-run/cloudflare';
 import { useLoaderData, Link } from '@remix-run/react';
 import { agentManager } from '../../agents/core/AgentManager';
 import '../../agents/registry';
+import { useState } from 'react';
 
 export const loader: LoaderFunction = async () => {
   const agents = agentManager.list().map((a) => ({
@@ -25,6 +26,17 @@ type LoaderData = {
 
 export default function AgentsPage() {
   const { agents } = useLoaderData<LoaderData>();
+  const [pingResult, setPingResult] = useState<string | null>(null);
+
+  const handlePing = async (agentId: string) => {
+    const res = await fetch('/api.agents.delegate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agentId, type: 'ping' }),
+    });
+    const data = await res.json();
+    setPingResult(`${agentId}: ${data.success ? '✅' : '❌'} ${data.data?.message ?? data.error ?? ''}`);
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -42,6 +54,7 @@ export default function AgentsPage() {
               <th className="p-2 border-b border-gray-200 dark:border-gray-700">Name</th>
               <th className="p-2 border-b border-gray-200 dark:border-gray-700">Description</th>
               <th className="p-2 border-b border-gray-200 dark:border-gray-700">Skills</th>
+              <th className="p-2 border-b border-gray-200 dark:border-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -55,10 +68,23 @@ export default function AgentsPage() {
                 <td className="p-2 text-sm">
                   {agent.skills.length > 0 ? agent.skills.join(', ') : '—'}
                 </td>
+                <td className="p-2 text-sm">
+                  <button
+                    onClick={() => handlePing(agent.id)}
+                    className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 text-xs"
+                  >
+                    Ping
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+      {pingResult && (
+        <div className="text-sm mt-4 p-2 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+          {pingResult}
+        </div>
       )}
       <div className="pt-4">
         <Link
