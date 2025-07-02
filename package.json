@@ -39,8 +39,8 @@
     "electron:build:win": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --win",
     "electron:build:linux": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --linux",
     "electron:build:dist": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --mwl",
-    "mobile:start": "echo 'Expo start placeholder'",
-    "mobile:build": "echo 'Expo build placeholder - configure later'"
+    "mobile:start": "expo start --clear",
+    "mobile:build": "eas build -p android --profile preview --non-interactive"
   },
   "engines": {
     "node": ">=18.18.0"
@@ -203,10 +203,17 @@
     "vite-plugin-optimize-css-modules": "^1.2.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.3",
-    "wrangler": "^4.19.1"
+    "wrangler": "^4.19.1",
+    "@types/react-native": "^0.74.4",
+    "@types/node": "^20.11.30",
+    "@remix-run/cloudflare": "^2.16.0",
+    "@remix-run/react": "^2.16.0"
   },
   "resolutions": {
     "@typescript-eslint/utils": "^8.0.0-alpha.30"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.4.0",
+  "workspaces": [
+    "mobile"
+  ]
 }
