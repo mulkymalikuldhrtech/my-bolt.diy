@@ -538,3 +538,11 @@ pkg update -y && pkg upgrade -y \
 All commands above honour **owner lock-in**: only requests with `owner:"Mulky Malikul Dhaher"` are accepted by the AGI Orchestrator.
 
 ---
+
+### ⚡ One-line Setup
+```bash
+curl -fsSL https://raw.githubusercontent.com/stackblitz-labs/bolt.diy/agi-revolution/scripts/setup.sh | bash
+```
+This downloads & runs `scripts/setup.sh` which installs pnpm, global CLIs, workspace dependencies and prints next steps.
+
+---
