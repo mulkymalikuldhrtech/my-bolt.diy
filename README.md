@@ -415,6 +415,46 @@ pnpm run mobile:build   # (eas build –profile preview)
 
 Install Expo CLI and EAS then replace the placeholders with real commands. See `docs/mobile.md` (coming soon).
 
+## Android Installation Guide
+
+### Option A — Install Pre-built APK (recommended for testers)
+
+1. Download the latest release asset `ex-machina-mobile-v1.0.apk` from the [Releases page](https://github.com/stackblitz-labs/bolt.diy/releases).
+2. Copy the APK to your Android device (or open the link directly on the phone).
+3. On the device, enable "Install from unknown sources" when prompted and tap the APK to install.
+4. Launch **EX Machina**. On first run you will be asked for the backend URL:
+   * If phone and server share the same Wi-Fi → enter `http://<your-PC-IP>:5173`.
+   * If the backend is deployed publicly (Cloudflare, Vercel, etc.) → enter that HTTPS URL.
+5. Tap **Save & Connect** → the agent list should appear.
+
+### Option B — Build APK Locally with Expo / EAS
+
+Requirements: `node>=18`, `pnpm`, `expo-cli`, `eas-cli` (both global) and an Expo account.
+
+```bash
+# 1. Install global CLIs (once)
+pnpm add -g expo-cli eas-cli
+
+# 2. Install workspace deps
+pnpm install
+
+# 3. Build the mobile bundle
+pnpm run mobile:build   # runs: eas build -p android --profile preview --non-interactive
+
+# 4. After compilation finishes, EAS prints a download URL for the .apk /.aab
+```
+> By default the build uses the universal **preview** profile (debuggable, no Google Play signing). For production create a `release` profile in `mobile/eas.json`.
+
+### Running in the Expo Go App (Instant Preview)
+
+```bash
+pnpm run mobile:start   # expo start --clear
+```
+1. Scan the QR code using **Expo Go** on Android.  
+2. The bundle loads live; any code change under `mobile/` is hot-reloaded.
+
+---
+
 # Licensing
 **Who needs a commercial WebContainer API license?**
 
