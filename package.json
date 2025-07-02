@@ -40,7 +40,8 @@
     "electron:build:linux": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --linux",
     "electron:build:dist": "rm -rf dist && pnpm electron:build:renderer && pnpm electron:build:deps && electron-builder --mwl",
     "mobile:start": "expo start --clear",
-    "mobile:build": "eas build -p android --profile preview --non-interactive"
+    "mobile:build": "eas build -p android --profile preview --non-interactive",
+    "mobile:build:local": "mkdir -p release/android && eas build --local -p android --profile preview --output=release/android/ex-machina-mobile.apk"
   },
   "engines": {
     "node": ">=18.18.0"

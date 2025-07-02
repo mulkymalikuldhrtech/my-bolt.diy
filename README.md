@@ -450,6 +450,18 @@ The generated **Android App Bundle** complies with Play Store requirements (ARM 
 
 > **Backend URL** – On first launch the app will attempt to reach `http://localhost:5173`. If your phone is not on the same machine, open the drawer → Settings → _Backend_ and enter your public URL (or the LAN IP of your computer).
 
+### 📦 Offline (.apk) build inside repo  (AGI)
+
+If you **cannot use remote EAS cloud builds**, generate the debug APK locally and place it in `release/android/`:
+
+```bash
+pnpm run build-apk     # shorthand for scripts/build-apk.sh
+```
+
+After completion you will find `release/android/ex-machina-mobile.apk` which can be sideloaded on any device.
+
+> The script leverages **EAS Local Build**, so ensure Android SDK & JDK 17 are installed or use Docker (`eas build --local --docker`).
+
 # Licensing
 **Who needs a commercial WebContainer API license?**
 
