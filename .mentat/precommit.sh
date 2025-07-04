@@ -12,14 +12,8 @@ if [ ! -d "node_modules" ]; then
     pnpm install
 fi
 
-# Build the project (required for typecheck to work)
-if [ ! -d "build" ]; then
-    echo "Building project..."
-    pnpm run build
-fi
-
 # Run ESLint with fix and Prettier formatting
 pnpm run lint:fix
 
-# Run TypeScript type checking
-pnpm run typecheck
+# Note: Skipping typecheck in precommit as it requires a full build
+# which is too heavy for precommit. TypeScript checking is handled in CI.
