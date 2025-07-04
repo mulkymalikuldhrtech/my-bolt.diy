@@ -373,31 +373,66 @@ export const Workbench = memo(
           variants={workbenchVariants}
           className="z-workbench"
         >
+          {/* Mobile backdrop overlay */}
+          {showWorkbench && isSmallViewport && (
+            <div 
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-10 lg:hidden"
+              onClick={() => workbenchStore.showWorkbench.set(false)}
+            />
+          )}
+
           <div
             className={classNames(
-              'fixed top-[calc(var(--header-height)+1.2rem)] bottom-6 w-[var(--workbench-inner-width)] z-0 transition-[left,width] duration-200 bolt-ease-cubic-bezier',
+              'fixed z-20 transition-[left,width,top,bottom] duration-200 bolt-ease-cubic-bezier',
               {
-                'w-full': isSmallViewport,
+                // Mobile: full screen overlay
+                'inset-0 w-full h-full': isSmallViewport,
+                // Desktop: side panel
+                'top-[calc(var(--header-height)+1.2rem)] bottom-6 w-[var(--workbench-inner-width)]': !isSmallViewport,
                 'left-0': showWorkbench && isSmallViewport,
-                'left-[var(--workbench-left)]': showWorkbench,
+                'left-[var(--workbench-left)]': showWorkbench && !isSmallViewport,
                 'left-[100%]': !showWorkbench,
               },
             )}
           >
-            <div className="absolute inset-0 px-2 lg:px-4">
-              <div className="h-full flex flex-col bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor shadow-sm rounded-lg overflow-hidden">
+            <div className={classNames(
+              'absolute inset-0',
+              isSmallViewport ? 'p-0' : 'px-2 lg:px-4'
+            )}>
+              <div className={classNames(
+                'h-full flex flex-col bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor shadow-sm overflow-hidden',
+                isSmallViewport ? 'rounded-none' : 'rounded-lg'
+              )}>
+                {/* Mobile header with close button */}
+                {isSmallViewport && (
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-bolt-elements-borderColor bg-bolt-elements-background-depth-1">
+                    <h2 className="font-semibold text-bolt-elements-textPrimary">Code Editor</h2>
+                    <button
+                      onClick={() => workbenchStore.showWorkbench.set(false)}
+                      className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-bolt-elements-background-depth-3 transition-colors text-bolt-elements-textPrimary"
+                    >
+                      <div className="i-ph:x text-lg" />
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex items-center px-3 py-2 border-b border-bolt-elements-borderColor gap-1.5">
-                  <button
-                    className={`${showChat ? 'i-ph:sidebar-simple-fill' : 'i-ph:sidebar-simple'} text-lg text-bolt-elements-textSecondary mr-1`}
-                    disabled={!canHideChat || isSmallViewport}
-                    onClick={() => {
-                      if (canHideChat) {
-                        chatStore.setKey('showChat', !showChat);
-                      }
-                    }}
-                  />
+                  {/* Hide chat toggle on mobile, show on desktop */}
+                  {!isSmallViewport && (
+                    <button
+                      className={`${showChat ? 'i-ph:sidebar-simple-fill' : 'i-ph:sidebar-simple'} text-lg text-bolt-elements-textSecondary mr-1`}
+                      disabled={!canHideChat}
+                      onClick={() => {
+                        if (canHideChat) {
+                          chatStore.setKey('showChat', !showChat);
+                        }
+                      }}
+                    />
+                  )}
+                  
                   <Slider selected={selectedView} options={sliderOptions} setSelected={setSelectedView} />
                   <div className="ml-auto" />
+                  
                   {selectedView === 'code' && (
                     <div className="flex overflow-y-auto">
                       <PanelHeaderButton
@@ -407,12 +442,12 @@ export const Workbench = memo(
                         }}
                       >
                         <div className="i-ph:terminal" />
-                        Toggle Terminal
+                        <span className="hidden sm:inline">Toggle Terminal</span>
                       </PanelHeaderButton>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger className="text-sm flex items-center gap-1 text-bolt-elements-item-contentDefault bg-transparent enabled:hover:text-bolt-elements-item-contentActive rounded-md p-1 enabled:hover:bg-bolt-elements-item-backgroundActive disabled:cursor-not-allowed">
                           <div className="i-ph:box-arrow-up" />
-                          Sync
+                          <span className="hidden sm:inline">Sync</span>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content
                           className={classNames(
@@ -457,14 +492,18 @@ export const Workbench = memo(
                   {selectedView === 'diff' && (
                     <FileModifiedDropdown fileHistory={fileHistory} onSelectFile={handleSelectFile} />
                   )}
-                  <IconButton
-                    icon="i-ph:x-circle"
-                    className="-mr-1"
-                    size="xl"
-                    onClick={() => {
-                      workbenchStore.showWorkbench.set(false);
-                    }}
-                  />
+                  
+                  {/* Desktop close button */}
+                  {!isSmallViewport && (
+                    <IconButton
+                      icon="i-ph:x-circle"
+                      className="-mr-1"
+                      size="xl"
+                      onClick={() => {
+                        workbenchStore.showWorkbench.set(false);
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="relative flex-1 overflow-hidden">
                   <View initial={{ x: '0%' }} animate={{ x: selectedView === 'code' ? '0%' : '-100%' }}>

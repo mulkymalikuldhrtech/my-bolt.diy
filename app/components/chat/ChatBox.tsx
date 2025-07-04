@@ -101,33 +101,60 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
         <rect className={classNames(styles.PromptEffectLine)} pathLength="100" strokeLinecap="round"></rect>
         <rect className={classNames(styles.PromptShine)} x="48" y="24" width="70" height="1"></rect>
       </svg>
+      {/* Always show model settings on first load, make it more accessible */}
       <div>
         <ClientOnly>
           {() => (
-            <div className={props.isModelSettingsCollapsed ? 'hidden' : ''}>
-              <ModelSelector
-                key={props.provider?.name + ':' + props.modelList.length}
-                model={props.model}
-                setModel={props.setModel}
-                modelList={props.modelList}
-                provider={props.provider}
-                setProvider={props.setProvider}
-                providerList={props.providerList || (PROVIDER_LIST as ProviderInfo[])}
-                apiKeys={props.apiKeys}
-                modelLoading={props.isModelLoading}
-              />
-              {(props.providerList || []).length > 0 &&
-                props.provider &&
-                (!LOCAL_PROVIDERS.includes(props.provider.name) || 'OpenAILike') && (
-                  <APIKeyManager
-                    provider={props.provider}
-                    apiKey={props.apiKeys[props.provider.name] || ''}
-                    setApiKey={(key) => {
-                      props.onApiKeysChange(props.provider.name, key);
-                    }}
-                  />
-                )}
-            </div>
+            <>
+              {/* Model selector - always visible by default until explicitly collapsed */}
+              <div className={props.isModelSettingsCollapsed ? 'hidden' : ''}>
+                <ModelSelector
+                  key={props.provider?.name + ':' + props.modelList.length}
+                  model={props.model}
+                  setModel={props.setModel}
+                  modelList={props.modelList}
+                  provider={props.provider}
+                  setProvider={props.setProvider}
+                  providerList={props.providerList || (PROVIDER_LIST as ProviderInfo[])}
+                  apiKeys={props.apiKeys}
+                  modelLoading={props.isModelLoading}
+                />
+                {(props.providerList || []).length > 0 &&
+                  props.provider &&
+                  (!LOCAL_PROVIDERS.includes(props.provider.name) || 'OpenAILike') && (
+                    <APIKeyManager
+                      provider={props.provider}
+                      apiKey={props.apiKeys[props.provider.name] || ''}
+                      setApiKey={(key) => {
+                        props.onApiKeysChange(props.provider.name, key);
+                      }}
+                    />
+                  )}
+              </div>
+              
+              {/* Quick model info when collapsed - mobile friendly */}
+              {props.isModelSettingsCollapsed && (
+                <div className="flex items-center justify-between p-2 mb-2 bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor rounded-lg">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="i-ph:robot text-bolt-elements-textSecondary" />
+                    <span className="text-bolt-elements-textPrimary font-medium">
+                      {props.provider?.name || 'No Provider'}
+                    </span>
+                    <span className="text-bolt-elements-textSecondary">•</span>
+                    <span className="text-bolt-elements-textSecondary truncate max-w-32">
+                      {props.model || 'No Model'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => props.setIsModelSettingsCollapsed(false)}
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 transition-colors text-bolt-elements-textPrimary"
+                  >
+                    <div className="i-ph:gear text-sm" />
+                    Change
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </ClientOnly>
       </div>
@@ -258,7 +285,51 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           )}
         </ClientOnly>
         <div className="flex justify-between items-center text-sm p-4 pt-2">
-          <div className="flex gap-1 items-center">
+          {/* Mobile: Simplified controls */}
+          <div className="flex gap-1 items-center lg:hidden">
+            <ColorSchemeDialog designScheme={props.designScheme} setDesignScheme={props.setDesignScheme} />
+            <IconButton title="Upload file" className="transition-all" onClick={() => props.handleFileUpload()}>
+              <div className="i-ph:paperclip text-xl"></div>
+            </IconButton>
+            <IconButton
+              title="Enhance prompt"
+              disabled={props.input.length === 0 || props.enhancingPrompt}
+              className={classNames('transition-all', props.enhancingPrompt ? 'opacity-100' : '')}
+              onClick={() => {
+                props.enhancePrompt?.();
+                toast.success('Prompt enhanced!');
+              }}
+            >
+              {props.enhancingPrompt ? (
+                <div className="i-svg-spinners:90-ring-with-bg text-bolt-elements-loader-progress text-xl animate-spin"></div>
+              ) : (
+                <div className="i-bolt:stars text-xl"></div>
+              )}
+            </IconButton>
+            <SpeechRecognitionButton
+              isListening={props.isListening}
+              onStart={props.startListening}
+              onStop={props.stopListening}
+              disabled={props.isStreaming}
+            />
+            {/* Model Settings Toggle for Mobile */}
+            <IconButton
+              title="Settings"
+              className={classNames('transition-all', {
+                'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent':
+                  !props.isModelSettingsCollapsed,
+                'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault':
+                  props.isModelSettingsCollapsed,
+              })}
+              onClick={() => props.setIsModelSettingsCollapsed(!props.isModelSettingsCollapsed)}
+              disabled={!props.providerList || props.providerList.length === 0}
+            >
+              <div className="i-ph:gear text-lg" />
+            </IconButton>
+          </div>
+
+          {/* Desktop: Full controls */}
+          <div className="hidden lg:flex gap-1 items-center">
             <ColorSchemeDialog designScheme={props.designScheme} setDesignScheme={props.setDesignScheme} />
             <IconButton title="Upload file" className="transition-all" onClick={() => props.handleFileUpload()}>
               <div className="i-ph:paperclip text-xl"></div>
@@ -317,12 +388,35 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
               {props.isModelSettingsCollapsed ? <span className="text-xs">{props.model}</span> : <span />}
             </IconButton>
           </div>
-          {props.input.length > 3 ? (
-            <div className="text-xs text-bolt-elements-textTertiary">
+
+          {/* Chat Mode Toggle for Mobile */}
+          {props.chatStarted && (
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                className={classNames(
+                  'flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all text-sm font-medium',
+                  props.chatMode === 'discuss'
+                    ? 'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent'
+                    : 'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault hover:bg-bolt-elements-item-backgroundActive',
+                )}
+                onClick={() => {
+                  props.setChatMode?.(props.chatMode === 'discuss' ? 'build' : 'discuss');
+                }}
+              >
+                <div className={`i-ph:${props.chatMode === 'discuss' ? 'chats' : 'code'} text-lg`} />
+                <span>{props.chatMode === 'discuss' ? 'Discuss' : 'Build'}</span>
+              </button>
+            </div>
+          )}
+
+          {/* Keyboard hint - only show on desktop */}
+          {props.input.length > 3 && (
+            <div className="hidden lg:block text-xs text-bolt-elements-textTertiary">
               Use <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Shift</kbd> +{' '}
               <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Return</kbd> a new line
             </div>
-          ) : null}
+          )}
+          
           <SupabaseConnection />
           <ExpoQrModal open={props.qrModalOpen} onClose={() => props.setQrModalOpen(false)} />
         </div>
