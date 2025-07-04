@@ -462,7 +462,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
             </StickToBottom>
             <div className="flex flex-col justify-center">
               {!chatStarted && (
-                <div className="flex justify-center gap-2">
+                <div className="flex justify-center gap-2 flex-wrap">
                   {ImportButtons(importChat)}
                   <GitCloneButton importChat={importChat} />
                 </div>
@@ -480,6 +480,57 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                 {!chatStarted && <StarterTemplates />}
               </div>
             </div>
+
+            {/* Quick Access Floating Action Bar for Mobile */}
+            {chatStarted && (
+              <div className="fixed bottom-4 right-4 z-50 lg:hidden">
+                <div className="flex flex-col gap-2">
+                  {/* Workbench Toggle */}
+                  <ClientOnly>
+                    {() => {
+                      const { workbenchStore } = require('~/lib/stores/workbench');
+                      const showWorkbench = workbenchStore.showWorkbench.get();
+                      return (
+                        <button
+                          onClick={() => workbenchStore.showWorkbench.set(!showWorkbench)}
+                          className={classNames(
+                            'w-12 h-12 rounded-full shadow-lg border-2 flex items-center justify-center transition-all',
+                            showWorkbench
+                              ? 'bg-accent-500 border-accent-600 text-white'
+                              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                          )}
+                          title="Toggle Code Editor"
+                        >
+                          <div className="i-ph:code text-lg" />
+                        </button>
+                      );
+                    }}
+                  </ClientOnly>
+
+                  {/* Export Chat */}
+                  {exportChat && (
+                    <button
+                      onClick={exportChat}
+                      className="w-12 h-12 rounded-full shadow-lg border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all"
+                      title="Export Chat"
+                    >
+                      <div className="i-ph:download text-lg" />
+                    </button>
+                  )}
+
+                  {/* Scroll to Top */}
+                  <button
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="w-12 h-12 rounded-full shadow-lg border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all"
+                    title="Scroll to Top"
+                  >
+                    <div className="i-ph:arrow-up text-lg" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           <ClientOnly>
             {() => (

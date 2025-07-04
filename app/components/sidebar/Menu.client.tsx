@@ -296,10 +296,32 @@ export const Menu = () => {
       }
     }
 
+    // Listen for custom toggle events from header
+    function onToggleSidebar(event: CustomEvent) {
+      if (isSettingsOpen) {
+        return;
+      }
+      setOpen(event.detail.open);
+    }
+
+    // Handle clicks outside to close sidebar on mobile
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        // Only auto-close on mobile/small screens
+        if (window.innerWidth < 1024) {
+          setOpen(false);
+        }
+      }
+    }
+
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('toggleSidebar', onToggleSidebar as EventListener);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('toggleSidebar', onToggleSidebar as EventListener);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isSettingsOpen]);
 
@@ -324,6 +346,14 @@ export const Menu = () => {
 
   return (
     <>
+      {/* Mobile overlay */}
+      {open && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+      
       <motion.div
         ref={menuRef}
         initial="closed"
@@ -331,9 +361,10 @@ export const Menu = () => {
         variants={menuVariants}
         style={{ width: '340px' }}
         className={classNames(
-          'flex selection-accent flex-col side-menu fixed top-0 h-full rounded-r-2xl',
+          'flex selection-accent flex-col side-menu fixed top-0 h-full',
           'bg-white dark:bg-gray-950 border-r border-bolt-elements-borderColor',
-          'shadow-sm text-sm',
+          'shadow-lg lg:shadow-sm text-sm',
+          'lg:rounded-r-2xl rounded-r-none',
           isSettingsOpen ? 'z-40' : 'z-sidebar',
         )}
       >
