@@ -12,6 +12,12 @@ if [ ! -d "node_modules" ]; then
     pnpm install
 fi
 
+# Build the project (required for typecheck to work)
+if [ ! -d "build" ]; then
+    echo "Building project..."
+    pnpm run build
+fi
+
 # Run ESLint with fix and Prettier formatting
 pnpm run lint:fix
 
